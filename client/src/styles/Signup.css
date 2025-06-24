@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+.login-signup-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1b1b2f, #3a0ca3);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.login-signup-card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 40px 30px;
+  width: 350px;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+  color: #f0e68c;
+  text-align: center;
+}
+
+.login-signup-card h2 {
+  font-size: 24px;
+  color: #ffd700;
+  margin-bottom: 10px;
+}
+
+.login-signup-card p {
+  font-size: 13px;
+  color: #dcdcdc;
+  margin-bottom: 20px;
+}
+
+.login-signup-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-signup-form input {
+  padding: 12px 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 14px;
+  box-shadow: inset 0 0 5px #00ffff;
+  transition: 0.3s ease;
+}
+
+.login-signup-form input:focus {
+  box-shadow: 0 0 10px #ffd700, inset 0 0 10px #ffd700;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.login-signup-btn {
+  padding: 12px;
+  margin-top: 10px;
+  background: linear-gradient(45deg, #ffd700, #ff8c00);
+  color: #1b1b2f;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 20px #00ffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-signup-btn:hover {
+  box-shadow: 0 0 30px #00ffff;
+  transform: scale(1.05);
+}
+
+.login-signup-toggle {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #fffacd;
+}
+
+.login-signup-toggle span {
+  color: #ffd700;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 5px;
+  transition: color 0.3s;
+}
+
+.login-signup-toggle span:hover {
+  color: #ffffff;
+}

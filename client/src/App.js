@@ -1,9 +1,11 @@
 import './App.css';
 import Navbar from './components/Navbar';
+import LoginSignup from './pages/Signup';
 function App() {
   return (
     <div>
-      <Navbar/>
+      {/* <Navbar/> */}
+      <LoginSignup/>
     </div>
   );
 }
