@@ -1,88 +1,76 @@
-import React, { useState, useEffect } from "react";
-import "../styles/Navbar.css";
-import { IonIcon } from "@ionic/react";
-import { menuOutline, closeOutline, logoFacebook, logoTwitter, logoYoutube } from "ionicons/icons";
+import React, { useState, useEffect } from 'react';
+import { FaBars, FaTimes, FaSearch, FaUser } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import '../styles/Navbar.css';
 
 const Navbar = () => {
-  const [navOpen, setNavOpen] = useState(false);
-  const [headerActive, setHeaderActive] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setHeaderActive(window.scrollY > 50);
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleNavbar = () => setNavOpen(!navOpen);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
-    <header className={`header ${headerActive ? "active" : ""}`} data-header>
-      <div className={`overlay ${navOpen ? "active" : ""}`} onClick={toggleNavbar}></div>
-
-      <div className="header-top">
-        <div className="container">
-          <a href="tel:+01123456790" className="helpline-box"></a>
-
-          <a href="/" className="logo">
-            <img src="./assets/images/logo.svg" alt="Tourly logo" />
-          </a>
-
-          <div className="header-btn-group">
-            <button className="nav-open-btn" aria-label="Open Menu" onClick={toggleNavbar}>
-              <IonIcon icon={menuOutline} />
-            </button>
-          </div>
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      <div className="navbar-container">
+        {/* Logo */}
+        <div className="navbar-logo">
+          <Link to="/">JOURNIO</Link>
         </div>
+
+        {/* Desktop Menu */}
+        <div className="navbar-links">
+          <Link to="/destinations">Destinations</Link>
+          <Link to="/experiences">Experiences</Link>
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
+        </div>
+
+        {/* Search and Auth */}
+        <div className="navbar-actions">
+          <button className="search-btn">
+            <FaSearch />
+          </button>
+          <Link to="/signup" className="auth-btn">
+            <FaUser />
+            <span>Sign In</span>
+          </Link>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
+          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
       </div>
 
-      <div className="header-bottom">
-        <div className="container">
-          <ul className="social-list">
-            <li>
-              <a href="#" className="social-link">
-                <IonIcon icon={logoFacebook} />
-              </a>
-            </li>
-            <li>
-              <a href="#" className="social-link">
-                <IonIcon icon={logoTwitter} />
-              </a>
-            </li>
-            <li>
-              <a href="#" className="social-link">
-                <IonIcon icon={logoYoutube} />
-              </a>
-            </li>
-          </ul>
-
-          <nav className={`navbar ${navOpen ? "active" : ""}`} data-navbar>
-            <div className="navbar-top">
-              <a href="/" className="logo">
-                <img src="./assets/images/logo-blue.svg" alt="Tourly logo" />
-              </a>
-              <button className="nav-close-btn" aria-label="Close Menu" onClick={toggleNavbar}>
-                <IonIcon icon={closeOutline} />
-              </button>
-            </div>
-
-            <ul className="navbar-list">
-              <li><a href="#home" className="navbar-link" onClick={toggleNavbar}>home</a></li>
-              <li><a href="Hotel.html" className="navbar-link" onClick={toggleNavbar}>Hotels</a></li>
-              <li><a href="#destination" className="navbar-link" onClick={toggleNavbar}>destination</a></li>
-              <li><a href="#package" className="navbar-link" onClick={toggleNavbar}>packages</a></li>
-              <li><a href="#gallery" className="navbar-link" onClick={toggleNavbar}>gallery</a></li>
-              <li><a href="#contact" className="navbar-link" onClick={toggleNavbar}>contact us</a></li>
-            </ul>
-          </nav>
-
-          <a id="auth-btn" href="login-page.html">
-            <button className="btn btn-primary">login</button>
-          </a>
+      {/* Mobile Menu */}
+      <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
+        <Link to="/destinations" onClick={toggleMobileMenu}>Destinations</Link>
+        <Link to="/experiences" onClick={toggleMobileMenu}>Experiences</Link>
+        <Link to="/about" onClick={toggleMobileMenu}>About</Link>
+        <Link to="/contact" onClick={toggleMobileMenu}>Contact</Link>
+        <div className="mobile-auth">
+          <Link to="/signup" className="auth-btn" onClick={toggleMobileMenu}>
+            <FaUser />
+            <span>Sign In</span>
+          </Link>
         </div>
       </div>
-    </header>
+    </nav>
   );
 };
 
