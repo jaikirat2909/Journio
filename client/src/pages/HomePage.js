@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import '../styles/HomePage.css';
 
 const HomePage = () => {
@@ -11,12 +11,13 @@ const HomePage = () => {
   // Destination hover state
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  const phrases = [
+  // ✅ useMemo so phrases doesn’t change on every render
+  const phrases = useMemo(() => [
     "breathtaking destinations",
     "unforgettable experiences",
     "cultural adventures",
     "luxury getaways"
-  ];
+  ], []);
 
   const destinations = [
     {
@@ -88,10 +89,10 @@ const HomePage = () => {
       clearTimeout(typingTimer);
       clearInterval(caretTimer);
     };
-  }, [typedText, currentPhraseIndex, isDeleting]);
+  }, [typedText, currentPhraseIndex, isDeleting, phrases]);
 
   return (
-    <div className="homepage">
+     <div className="homepage">
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-background"></div>
@@ -251,4 +252,7 @@ const HomePage = () => {
   );
 };
 
+
+
 export default HomePage;
+
