@@ -6,6 +6,7 @@ import '../styles/Payment.css';
 
 // Load Stripe with your publishable key
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+
 const PaymentForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -22,7 +23,31 @@ const PaymentForm = () => {
 
   useEffect(() => {
     if (selectedPackage && bookingInfo) {
-      // Create payment intent on component mount
+      const createPaymentIntent = async () => {
+        try {
+          const totalAmount = selectedPackage.price * bookingInfo.travelers;
+          
+          const response = await fetch('http://localhost:5000/api/payments/create-payment-intent', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              amount: totalAmount * 100, // Convert to cents
+              currency: 'usd',
+              package: selectedPackage,
+              bookingInfo
+            })
+          });
+          
+          const data = await response.json();
+          setClientSecret(data.clientSecret);
+        } catch (error) {
+          console.error('Error creating payment intent:', error);
+          setPaymentError('Failed to initialize payment. Please try again.');
+        }
+      };
+
       createPaymentIntent();
     }
   }, [selectedPackage, bookingInfo]);
@@ -31,36 +56,10 @@ const PaymentForm = () => {
     return <div className="error-message">No booking information found. Please start over.</div>;
   }
 
-  const createPaymentIntent = async () => {
-    try {
-      const totalAmount = selectedPackage.price * bookingInfo.travelers;
-      
-      const response = await fetch('http://localhost:5000/api/payments/create-payment-intent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: totalAmount * 100, // Convert to cents
-          currency: 'usd',
-          package: selectedPackage,
-          bookingInfo
-        })
-      });
-      
-      const data = await response.json();
-      setClientSecret(data.clientSecret);
-    } catch (error) {
-      console.error('Error creating payment intent:', error);
-      setPaymentError('Failed to initialize payment. Please try again.');
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!stripe || !elements) {
-      // Stripe.js hasn't yet loaded
       return;
     }
     
@@ -84,11 +83,8 @@ const PaymentForm = () => {
         setPaymentError(error.message);
         setIsProcessing(false);
       } else if (paymentIntent.status === 'succeeded') {
-        // Payment succeeded
         setTransactionId(paymentIntent.id);
         setPaymentSuccess(true);
-        
-        // Save payment details to database
         await savePaymentDetails(paymentIntent.id);
       }
     } catch (error) {
