@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import '../styles/HomePage.css';
-
+import { Link } from 'react-router-dom';
 const HomePage = () => {
   // Typing animation state
   const [typedText, setTypedText] = useState('');
@@ -108,8 +108,9 @@ const HomePage = () => {
               Curated travel experiences tailored to your dreams
             </p>
           </div>
-          
+          <Link to="/destinations"> 
           <div className="hero-cta">
+            
             <button className="explore-btn">
               <span>Explore Journeys</span>
               <svg className="arrow-icon" viewBox="0 0 24 24">
@@ -124,7 +125,9 @@ const HomePage = () => {
               </div>
               <span>Watch Story</span>
             </button>
+           
           </div>
+           </Link>
         </div>
 
         <div className="scroll-hint">

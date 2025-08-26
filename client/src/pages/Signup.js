@@ -1,6 +1,6 @@
 import '../styles/Signup.css';
-
 import React, { useState } from 'react';
+import { useAuth } from '../hooks/useAuth'; // Import the hook
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,7 +11,12 @@ const AuthPage = () => {
     confirmPassword: ''
   });
 
-  const [message, setMessage] = useState(""); // new state for response messages
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Use the auth hook
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,8 +28,15 @@ const AuthPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle authentication logic here
-    console.log(formData);
+    setIsLoading(true);
+    
+    // Validate passwords match for signup
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      setMessage("Passwords do not match");
+      setIsError(true);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const endpoint = isLogin
@@ -45,12 +57,27 @@ const AuthPage = () => {
 
       if (response.ok) {
         setMessage(data.message || (isLogin ? "Login successful!" : "Signup successful!"));
+        setIsError(false);
+        
+        // Store token and user data using the hook
+        if (data.token && data.user) {
+          login(data.user, data.token);
+          
+          // Redirect user after successful auth
+          setTimeout(() => {
+            window.location.href = '/dashboard'; // Redirect to dashboard
+          }, 1500);
+        }
       } else {
         setMessage(data.message || "Something went wrong");
+        setIsError(true);
       }
     } catch (error) {
       console.error("Error:", error);
       setMessage("Server error. Please try again later.");
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,6 +89,7 @@ const AuthPage = () => {
       password: '',
       confirmPassword: ''
     });
+    setMessage("");
   };
 
   return (
@@ -88,6 +116,7 @@ const AuthPage = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
+                disabled={isLoading}
               />
             </div>
           )}
@@ -101,6 +130,7 @@ const AuthPage = () => {
               value={formData.email}
               onChange={handleChange}
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -114,6 +144,7 @@ const AuthPage = () => {
               onChange={handleChange}
               required
               minLength="6"
+              disabled={isLoading}
             />
           </div>
 
@@ -128,6 +159,7 @@ const AuthPage = () => {
                 onChange={handleChange}
                 required
                 minLength="6"
+                disabled={isLoading}
               />
             </div>
           )}
@@ -138,12 +170,24 @@ const AuthPage = () => {
             </div>
           )}
 
-          <button type="submit" className="auth-button">
-            {isLogin ? 'Sign In' : 'Sign Up'}
+          <button 
+            type="submit" 
+            className="auth-button"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
           </button>
         </form>
 
-        {message && <p style={{ marginTop: "10px", color: "blue" }}>{message}</p>}
+        {message && (
+          <p style={{ 
+            marginTop: "10px", 
+            color: isError ? "red" : "green",
+            textAlign: "center"
+          }}>
+            {message}
+          </p>
+        )}
 
         {/* Social Login */}
         <div className="social-login">
@@ -151,13 +195,13 @@ const AuthPage = () => {
             <span>or continue with</span>
           </div>
           <div className="social-buttons">
-            <button className="social-button google">
+            <button className="social-button google" disabled={isLoading}>
               <svg viewBox="0 0 24 24">
                 <path d="M12.545 10.239v3.821h5.445c-0.712 2.315-2.647 3.972-5.445 3.972-3.332 0-6.033-2.701-6.033-6.032s2.701-6.032 6.033-6.032c1.498 0 2.866 0.549 3.921 1.453l2.814-2.814c-1.784-1.664-4.153-2.675-6.735-2.675-5.522 0-10 4.477-10 10s4.478 10 10 10c8.396 0 10-7.496 10-10 0-0.67-0.069-1.325-0.189-1.955h-9.811z"/>
               </svg>
               Google
             </button>
-            <button className="social-button facebook">
+            <button className="social-button facebook" disabled={isLoading}>
               <svg viewBox="0 0 24 24">
                 <path d="M22.675 0h-21.35c-0.732 0-1.325 0.593-1.325 1.325v21.351c0 0.731 0.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463 0.099 2.795 0.143v3.24l-1.918 0.001c-1.504 0-1.795 0.715-1.795 1.763v2.313h3.587l-0.467 3.622h-3.12v9.293h6.116c0.73 0 1.323-0.593 1.323-1.325v-21.35c0-0.732-0.593-1.325-1.325-1.325z"/>
               </svg>
@@ -169,7 +213,12 @@ const AuthPage = () => {
         {/* Auth Toggle */}
         <div className="auth-toggle">
           {isLogin ? "Don't have an account?" : "Already have an account?"}
-          <button type="button" onClick={toggleAuthMode} className="toggle-button">
+          <button 
+            type="button" 
+            onClick={toggleAuthMode} 
+            className="toggle-button"
+            disabled={isLoading}
+          >
             {isLogin ? 'Sign Up' : 'Sign In'}
           </button>
         </div>

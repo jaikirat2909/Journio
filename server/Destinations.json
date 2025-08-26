@@ -1,0 +1,374 @@
+[
+  {
+    "id": 1,
+    "name": "Bali, Indonesia",
+    "country": "Indonesia",
+    "image": "https://images.unsplash.com/photo-1537996194471-e657df975ab4",
+    "description": "Tropical paradise with lush jungles and pristine beaches",
+    "highlights": [
+      "Ubud Monkey Forest", 
+      "Tanah Lot Temple",
+      "Uluwatu Cliff",
+      "Tegallalang Rice Terraces"
+    ],
+    "packages": [
+      {
+        "id": 101,
+        "name": "Bali Cultural Retreat",
+        "price": 899,
+        "duration": "6D/5N",
+        "image": "https://images.unsplash.com/photo-1544551763-46a013bb70d5",
+        "includes": [
+          "Return flights (economy)",
+          "5 nights at 4-star resort",
+          "Daily breakfast",
+          "3 cultural tours",
+          "Airport transfers"
+        ],
+        "flightDetails": {
+          "airline": "Garuda Indonesia",
+          "departure": "08:00 AM",
+          "arrival": "03:00 PM",
+          "duration": "7h 15m"
+        },
+        "hotelDetails": {
+          "name": "Puri Wulandari Resort",
+          "rating": 4,
+          "amenities": ["Infinity Pool", "Spa", "Free WiFi"]
+        },
+        "dates": ["2023-12-10", "2023-12-17", "2024-01-05"]
+      },
+      {
+        "id": 102,
+        "name": "Bali Luxury Escape",
+        "price": 1899,
+        "duration": "7D/6N",
+        "image": "https://i0.wp.com/luxurytravelcompany.com.au/wp-content/uploads/2015/09/StRegisBali.jpg?fit=1600%2C900&ssl=1",
+        "includes": [
+          "Business class flights",
+          "6 nights at 5-star private villa",
+          "Private chef & pool",
+          "Spa credits ($200)",
+          "VIP airport concierge"
+        ],
+        "flightDetails": {
+          "airline": "Singapore Airlines",
+          "departure": "10:30 AM",
+          "arrival": "04:45 PM",
+          "duration": "6h 45m"
+        },
+        "hotelDetails": {
+          "name": "The Mulia Villas",
+          "rating": 5,
+          "amenities": ["Private Beach", "Butler Service", "Luxury Spa"]
+        },
+        "dates": ["2023-12-15", "2024-01-10", "2024-02-05"]
+      },
+      {
+        "id": 103,
+        "name": "Bali Adventure Package",
+        "price": 1299,
+        "duration": "5D/4N",
+        "image": "https://images.pexels.com/photos/6336345/pexels-photo-6336345.jpeg?_gl=1*a3bl94*_ga*MTUyOTcwMTIzMy4xNzA5MTI3NTg4*_ga_8JE65Q40S6*czE3NTU0NDg2NDgkbzE2JGcxJHQxNzU1NDQ4NjcyJGozNiRsMCRoMA..",
+        "includes": [
+          "Return flights (economy)",
+          "4 nights at adventure camp",
+          "Whitewater rafting",
+          "Mount Batur sunrise trek",
+          "All equipment rentals"
+        ],
+        "flightDetails": {
+          "airline": "AirAsia",
+          "departure": "11:45 PM",
+          "arrival": "06:30 AM",
+          "duration": "8h 15m"
+        },
+        "hotelDetails": {
+          "name": "Bambu Indah Eco Resort",
+          "rating": 4,
+          "amenities": ["Jungle Views", "Organic Restaurant", "Yoga Deck"]
+        },
+        "dates": ["2023-12-05", "2023-12-20", "2024-01-15"]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Kyoto, Japan",
+    "country": "Japan",
+    "image": "https://images.unsplash.com/photo-1492571350019-22de08371fd3",
+    "description": "Ancient temples and beautiful cherry blossoms",
+    "highlights": [
+      "Fushimi Inari Shrine",
+      "Kinkaku-ji Temple",
+      "Arashiyama Bamboo Forest",
+      "Gion District"
+    ],
+    "packages": [
+      {
+        "id": 201,
+        "name": "Kyoto Cultural Journey",
+        "price": 1599,
+        "duration": "7D/6N",
+        "image": "https://wallpaperaccess.com/full/1113472.jpg",
+        "includes": [
+          "Return flights (economy)",
+          "6 nights at ryokan (traditional inn)",
+          "Kaiseki dinner experience",
+          "Tea ceremony workshop",
+          "JR Pass for local transport"
+        ],
+        "flightDetails": {
+          "airline": "Japan Airlines",
+          "departure": "09:15 AM",
+          "arrival": "02:30 PM",
+          "duration": "11h 45m"
+        },
+        "hotelDetails": {
+          "name": "Hiiragiya Ryokan",
+          "rating": 4,
+          "amenities": ["Onsen", "Tatami Rooms", "Garden Views"]
+        },
+        "dates": ["2024-03-20", "2024-04-05", "2024-04-15"]
+      },
+      {
+        "id": 202,
+        "name": "Kyoto Luxury Stay",
+        "price": 2999,
+        "duration": "5D/4N",
+        "image": "https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3",
+        "includes": [
+          "Business class flights",
+          "4 nights at 5-star hotel",
+          "Private geisha performance",
+          "Michelin-star dining",
+          "Chauffeur service"
+        ],
+        "flightDetails": {
+          "airline": "ANA",
+          "departure": "01:30 PM",
+          "arrival": "05:45 PM",
+          "duration": "10h 30m"
+        },
+        "hotelDetails": {
+          "name": "The Ritz-Carlton Kyoto",
+          "rating": 5,
+          "amenities": ["River Views", "Spa", "Fine Dining"]
+        },
+        "dates": ["2024-03-25", "2024-04-10", "2024-04-20"]
+      },
+      {
+        "id": 203,
+        "name": "Kyoto Cherry Blossom Tour",
+        "price": 2199,
+        "duration": "4D/3N",
+        "image": "https://images.unsplash.com/photo-1542051841857-5f90071e7989",
+        "includes": [
+          "Return flights (economy)",
+          "3 nights at boutique hotel",
+          "Guided blossom viewing tours",
+          "Photography workshop",
+          "Bento box lunches"
+        ],
+        "flightDetails": {
+          "airline": "Singapore Airlines",
+          "departure": "08:45 PM",
+          "arrival": "06:15 AM",
+          "duration": "12h 30m"
+        },
+        "hotelDetails": {
+          "name": "Hotel Kanra Kyoto",
+          "rating": 4,
+          "amenities": ["Modern Design", "Onsen Bath", "Bicycle Rentals"]
+        },
+        "dates": ["2024-04-01", "2024-04-08", "2024-04-12"]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Santorini, Greece",
+    "country": "Greece",
+    "image": "https://images.unsplash.com/photo-1516483638261-f4dbaf036963",
+    "description": "White-washed buildings with stunning sunset views",
+    "highlights": [
+      "Oia Village",
+      "Red Beach",
+      "Santorini Volcano",
+      "Akrotiri Ruins"
+    ],
+    "packages": [
+      {
+        "id": 301,
+        "name": "Santorini Romantic Getaway",
+        "price": 1799,
+        "duration": "5D/4N",
+        "image": "https://wallpapercrafter.com/th800/288796-oia-santorini-greece-sunset-island-sea-tourism.jpg",
+        "includes": [
+          "Return flights (economy)",
+          "4 nights at cave hotel",
+          "Private sunset cruise",
+          "Couples massage",
+          "Wine tasting tour"
+        ],
+        "flightDetails": {
+          "airline": "Aegean Airlines",
+          "departure": "07:30 AM",
+          "arrival": "12:45 PM",
+          "duration": "4h 15m"
+        },
+        "hotelDetails": {
+          "name": "Chromata Hotel",
+          "rating": 5,
+          "amenities": ["Infinity Pool", "Caldera Views", "Jacuzzi"]
+        },
+        "dates": ["2024-05-10", "2024-06-05", "2024-06-20"]
+      },
+      {
+        "id": 302,
+        "name": "Santorini Luxury Experience",
+        "price": 2499,
+        "duration": "6D/5N",
+        "image": "https://images.unsplash.com/photo-1570077188810-6e15717a94b5",
+        "includes": [
+          "Business class flights",
+          "5 nights at 5-star resort",
+          "Private yacht charter",
+          "Helicopter transfer",
+          "Personal concierge"
+        ],
+        "flightDetails": {
+          "airline": "Emirates",
+          "departure": "10:00 AM",
+          "arrival": "03:30 PM",
+          "duration": "6h 30m"
+        },
+        "hotelDetails": {
+          "name": "Grace Hotel Santorini",
+          "rating": 5,
+          "amenities": ["Private Suites", "Award-Winning Spa", "Gourmet Restaurant"]
+        },
+        "dates": ["2024-05-15", "2024-06-10", "2024-07-05"]
+      },
+      {
+        "id": 303,
+        "name": "Santorini Budget Escape",
+        "price": 1199,
+        "duration": "7D/6N",
+        "image": "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff",
+        "includes": [
+          "Return flights (economy)",
+          "6 nights at 3-star hotel",
+          "Public transport pass",
+          "Walking tour",
+          "Breakfast daily"
+        ],
+        "flightDetails": {
+          "airline": "Ryanair",
+          "departure": "06:45 AM",
+          "arrival": "11:30 AM",
+          "duration": "4h 45m"
+        },
+        "hotelDetails": {
+          "name": "Pension George",
+          "rating": 3,
+          "amenities": ["Central Location", "Rooftop Terrace", "Free WiFi"]
+        },
+        "dates": ["2024-05-05", "2024-05-20", "2024-06-15"]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Paris, France",
+    "country": "France",
+    "image": "https://images.unsplash.com/photo-1431274172761-fca41d930114",
+    "description": "The city of love with iconic landmarks",
+    "highlights": [
+      "Eiffel Tower",
+      "Louvre Museum",
+      "Notre-Dame Cathedral",
+      "Montmartre District"
+    ],
+    "packages": [
+      {
+        "id": 401,
+        "name": "Paris Classic Tour",
+        "price": 1299,
+        "duration": "5D/4N",
+        "image": "https://images.unsplash.com/photo-1431274172761-fca41d930114",
+        "includes": [
+          "Return flights (economy)",
+          "4 nights at 4-star hotel",
+          "Eiffel Tower skip-the-line tickets",
+          "Seine River cruise",
+          "Museum pass"
+        ],
+        "flightDetails": {
+          "airline": "Air France",
+          "departure": "08:00 AM",
+          "arrival": "11:15 AM",
+          "duration": "2h 15m"
+        },
+        "hotelDetails": {
+          "name": "Hotel Brighton",
+          "rating": 4,
+          "amenities": ["Eiffel Tower Views", "Bar", "Concierge"]
+        },
+        "dates": ["2024-02-10", "2024-03-05", "2024-04-15"]
+      },
+      {
+        "id": 402,
+        "name": "Paris Luxury Weekend",
+        "price": 1999,
+        "duration": "3D/2N",
+        "image": "https://images.unsplash.com/photo-1522093007474-d86e9bf7ba6f",
+        "includes": [
+          "Business class flights",
+          "2 nights at 5-star hotel",
+          "Private shopping assistant",
+          "Michelin-star dinner",
+          "Limo transfers"
+        ],
+        "flightDetails": {
+          "airline": "British Airways",
+          "departure": "07:30 AM",
+          "arrival": "09:45 AM",
+          "duration": "1h 15m"
+        },
+        "hotelDetails": {
+          "name": "Le Meurice",
+          "rating": 5,
+          "amenities": ["Palace Hotel", "Dior Spa", "Central Location"]
+        },
+        "dates": ["2024-02-14", "2024-03-08", "2024-04-20"]
+      },
+      {
+        "id": 403,
+        "name": "Paris Family Package",
+        "price": 1599,
+        "duration": "6D/5N",
+        "image": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34",
+        "includes": [
+          "Return flights (economy)",
+          "5 nights at family apartment",
+          "Disneyland Paris tickets",
+          "City scavenger hunt",
+          "Kids eat free"
+        ],
+        "flightDetails": {
+          "airline": "EasyJet",
+          "departure": "10:30 AM",
+          "arrival": "12:45 PM",
+          "duration": "1h 45m"
+        },
+        "hotelDetails": {
+          "name": "Residence Charles Floquet",
+          "rating": 4,
+          "amenities": ["Kitchenette", "Family Rooms", "Near Eiffel Tower"]
+        },
+        "dates": ["2024-04-10", "2024-07-15", "2024-08-05"]
+      }
+    ]
+  }
+]
