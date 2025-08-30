@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import '../styles/HomePage.css';
 import { Link } from 'react-router-dom';
+
 const HomePage = () => {
   // Typing animation state
   const [typedText, setTypedText] = useState('');
@@ -11,7 +12,7 @@ const HomePage = () => {
   // Destination hover state
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  // ✅ useMemo so phrases doesn’t change on every render
+  // ✅ useMemo so phrases doesn't change on every render
   const phrases = useMemo(() => [
     "breathtaking destinations",
     "unforgettable experiences",
@@ -43,18 +44,24 @@ const HomePage = () => {
     }
   ];
 
-  const testimonials = [
+  const travelTips = [
     {
       id: 1,
-      quote: "Journio made our honeymoon unforgettable. Every detail was perfect!",
-      author: "Sarah & Michael",
-      location: "Paris, France"
+      title: "Pack Smart",
+      description: "Bring versatile clothing items that can be layered and mixed for different occasions.",
+      icon: "🎒"
     },
     {
       id: 2,
-      quote: "The best travel experience we've ever had. Highly recommended!",
-      author: "David Chen",
-      location: "Tokyo, Japan"
+      title: "Local Cuisine",
+      description: "Try authentic local dishes for a true cultural experience.",
+      icon: "🍜"
+    },
+    {
+      id: 3,
+      title: "Capture Memories",
+      description: "Take photos but also take time to be present in the moment.",
+      icon: "📸"
     }
   ];
 
@@ -108,15 +115,15 @@ const HomePage = () => {
               Curated travel experiences tailored to your dreams
             </p>
           </div>
-          <Link to="/destinations"> 
           <div className="hero-cta">
-            
-            <button className="explore-btn">
-              <span>Explore Journeys</span>
-              <svg className="arrow-icon" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
+            <Link to="/destinations">
+              <button className="explore-btn">
+                <span>Explore Journeys</span>
+                <svg className="arrow-icon" viewBox="0 0 24 24">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </Link>
             <button className="video-btn">
               <div className="play-icon">
                 <svg viewBox="0 0 24 24">
@@ -125,9 +132,7 @@ const HomePage = () => {
               </div>
               <span>Watch Story</span>
             </button>
-           
           </div>
-           </Link>
         </div>
 
         <div className="scroll-hint">
@@ -161,16 +166,29 @@ const HomePage = () => {
                   <h3>{destination.name}</h3>
                   <p>{destination.description}</p>
                   <div className="price-tag">{destination.price}</div>
-                  <button className="card-btn">
-                    <span>Explore</span>
-                    <svg viewBox="0 0 24 24">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                  </button>
+                  <Link to="/destinations">
+                    <button className="card-btn">
+                      <span>Explore</span>
+                      <svg viewBox="0 0 24 24">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                      </svg>
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
           ))}
+        </div>
+        
+        <div className="section-cta">
+          <Link to="/destinations">
+            <button className="view-all-btn">
+              <span>View All Destinations</span>
+              <svg viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </Link>
         </div>
       </section>
 
@@ -210,52 +228,39 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="testimonials-section">
+      {/* Travel Inspiration Section */}
+      <section className="inspiration-section">
         <div className="section-header">
           <h2 className="section-title">
-            <span>Traveler</span> <span className="highlight">Stories</span>
+            <span>Travel</span> <span className="highlight">Inspiration</span>
           </h2>
-          <p className="section-subtitle">What our clients say about their journeys</p>
+          <p className="section-subtitle">Tips and ideas for your next journey</p>
         </div>
 
-        <div className="testimonial-cards">
-          {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="testimonial-card">
-              <div className="quote-icon">"</div>
-              <p className="testimonial-quote">{testimonial.quote}</p>
-              <div className="testimonial-author">
-                <div className="author-info">
-                  <h4>{testimonial.author}</h4>
-                  <p>{testimonial.location}</p>
-                </div>
-              </div>
+        <div className="inspiration-grid">
+          {travelTips.map((tip) => (
+            <div key={tip.id} className="inspiration-card">
+              <div className="inspiration-icon">{tip.icon}</div>
+              <h3>{tip.title}</h3>
+              <p>{tip.description}</p>
             </div>
           ))}
         </div>
-      </section>
-
-      {/* Newsletter Section */}
-      <section className="newsletter-section">
-        <div className="newsletter-content">
-          <h2 className="newsletter-title">Ready for Your Next Adventure?</h2>
-          <p className="newsletter-text">Subscribe for exclusive travel deals and inspiration</p>
-          <form className="newsletter-form">
-            <input type="email" placeholder="Your email address" required />
-            <button type="submit">
-              <span>Subscribe</span>
+        
+        <div className="inspiration-cta">
+          <p>Ready to start your adventure?</p>
+          <Link to="/destinations">
+            <button className="inspiration-btn">
+              <span>Plan Your Trip</span>
               <svg viewBox="0 0 24 24">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </button>
-          </form>
+          </Link>
         </div>
       </section>
     </div>
   );
 };
 
-
-
 export default HomePage;
-

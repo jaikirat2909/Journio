@@ -11,6 +11,7 @@ import Payment from './pages/Payment';
 import Dashboard from './pages/Dashboard'; // Add this import
 import ProtectedRoute from './components/ProtectedRoute'; // Add this import
 import Experiences from './pages/Experiences';
+import AboutUs from './pages/About';
 // Initialize Stripe with your publishable key
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/login" element={<AuthPage />} />
           <Route path="/destinations" element={<Destinations />} />
           <Route path="/experiences" element={<Experiences />} />
+          <Route path="/about" element={<AboutUs />} />
           {/* Wrap the Payment route with Stripe Elements */}
           <Route 
             path="/payment" 

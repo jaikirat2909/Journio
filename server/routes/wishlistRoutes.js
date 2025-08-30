@@ -4,7 +4,8 @@ const {
   addToWishlist, 
   getWishlist, 
   removeFromWishlist, 
-  checkWishlist 
+  checkWishlist,
+  checkWishlistStatus // Add this import
 } = require('../controllers/wishlistController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -19,6 +20,9 @@ router.post('/', addToWishlist);
 
 // GET /api/wishlist/check/:destinationId - Check if item is in wishlist
 router.get('/check/:destinationId', checkWishlist);
+
+// POST /api/wishlist/status - Check wishlist status for multiple destinations
+router.post('/status', checkWishlistStatus); // Add this route
 
 // DELETE /api/wishlist/:itemId - Remove item from wishlist
 router.delete('/:itemId', removeFromWishlist);

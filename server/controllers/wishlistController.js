@@ -116,9 +116,34 @@ const checkWishlist = async (req, res) => {
   }
 };
 
+// Check wishlist status for multiple destinations
+const checkWishlistStatus = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { destinationIds } = req.body;
+
+    const user = await User.findById(userId).select('wishlist');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Create a status object for all requested destination IDs
+    const status = {};
+    destinationIds.forEach(id => {
+      status[id] = user.wishlist.some(item => item.destinationId === id);
+    });
+
+    res.status(200).json({ status });
+  } catch (error) {
+    console.error('Check wishlist status error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   addToWishlist,
   getWishlist,
   removeFromWishlist,
-  checkWishlist
+  checkWishlist,
+  checkWishlistStatus
 };

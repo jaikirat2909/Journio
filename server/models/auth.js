@@ -61,7 +61,8 @@ const userSchema = new mongoose.Schema({
       type: String,
       enum: ['confirmed', 'cancelled', 'completed'],
       default: 'confirmed'
-    }
+    },
+    transactionId: String 
   }]
 }, {
   timestamps: true

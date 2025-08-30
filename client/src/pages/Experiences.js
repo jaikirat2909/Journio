@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { FaStar, FaPaperPlane, FaComments, FaSmile } from 'react-icons/fa';
+import { FaStar, FaPaperPlane, FaComments, FaSmile, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import '../styles/Experiences.css';
 
 const Experiences = () => {
   const [feedback, setFeedback] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(2); // Show only 2 initially
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,11 +29,18 @@ const Experiences = () => {
     'Wildlife Safari'
   ];
 
+  const MAX_FEEDBACK_ITEMS = 6; // Maximum number of feedback items to store
+
   useEffect(() => {
     // Load saved feedback from localStorage
     const savedFeedback = localStorage.getItem('experiencesFeedback');
     if (savedFeedback) {
-      setFeedback(JSON.parse(savedFeedback));
+      const parsedFeedback = JSON.parse(savedFeedback);
+      // Sort by timestamp (newest first)
+      const sortedFeedback = parsedFeedback.sort((a, b) => 
+        new Date(b.timestamp) - new Date(a.timestamp)
+      );
+      setFeedback(sortedFeedback);
     }
   }, []);
 
@@ -81,7 +89,17 @@ const Experiences = () => {
         timestamp: new Date().toISOString()
       };
 
-      const updatedFeedback = [newFeedback, ...feedback];
+      // Add new feedback and limit to MAX_FEEDBACK_ITEMS
+      let updatedFeedback = [newFeedback, ...feedback];
+      
+      // If we exceed the maximum, remove the oldest items
+      if (updatedFeedback.length > MAX_FEEDBACK_ITEMS) {
+        // Sort by timestamp to ensure we remove the oldest
+        updatedFeedback.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        // Keep only the newest MAX_FEEDBACK_ITEMS
+        updatedFeedback = updatedFeedback.slice(0, MAX_FEEDBACK_ITEMS);
+      }
+      
       setFeedback(updatedFeedback);
       localStorage.setItem('experiencesFeedback', JSON.stringify(updatedFeedback));
 
@@ -94,6 +112,9 @@ const Experiences = () => {
         experienceType: ''
       });
       
+      // Reset visible count to show only the first 2
+      setVisibleCount(2);
+      
       setSubmitMessage('Thank you for sharing your experience!');
     } catch (error) {
       setSubmitMessage('Error submitting feedback. Please try again.');
@@ -101,6 +122,21 @@ const Experiences = () => {
       setIsSubmitting(false);
       setTimeout(() => setSubmitMessage(''), 4000);
     }
+  };
+
+  const handleLoadMore = () => {
+    if (visibleCount + 2 >= feedback.length) {
+      // Show all if we're about to reach the end
+      setVisibleCount(feedback.length);
+    } else {
+      // Show 2 more
+      setVisibleCount(prev => prev + 2);
+    }
+  };
+
+  const handleShowLess = () => {
+    // Show only the first 2
+    setVisibleCount(2);
   };
 
   const StarRating = ({ rating, onChange, readonly = false }) => {
@@ -118,6 +154,9 @@ const Experiences = () => {
       </div>
     );
   };
+
+  // Get the feedback items to display (newest first, limited by visibleCount)
+  const displayedFeedback = feedback.slice(0, visibleCount);
 
   return (
     <div className="experiences-page">
@@ -242,6 +281,9 @@ const Experiences = () => {
                 <FaSmile className="header-icon" />
                 <h2>Recent Experiences Shared</h2>
                 <p>See what other travelers are saying about their journeys</p>
+                <div className="feedback-count">
+                  Showing {displayedFeedback.length} of {feedback.length} experiences
+                </div>
               </div>
 
               {feedback.length === 0 ? (
@@ -253,23 +295,42 @@ const Experiences = () => {
                   </div>
                 </div>
               ) : (
-                <div className="feedback-list">
-                  {feedback.map(item => (
-                    <div key={item.id} className="feedback-item">
-                      <div className="feedback-header">
-                        <div className="user-info">
-                          <h4>{item.name}</h4>
-                          <span className="experience-type">{item.experienceType}</span>
+                <>
+                  <div className="feedback-list">
+                    {displayedFeedback.map(item => (
+                      <div key={item.id} className="feedback-item">
+                        <div className="feedback-header">
+                          <div className="user-info">
+                            <h4>{item.name}</h4>
+                            <span className="experience-type">{item.experienceType}</span>
+                          </div>
+                          <div className="feedback-meta">
+                            <StarRating rating={item.rating} readonly={true} />
+                            <span className="date">{item.date}</span>
+                          </div>
                         </div>
-                        <div className="feedback-meta">
-                          <StarRating rating={item.rating} readonly={true} />
-                          <span className="date">{item.date}</span>
-                        </div>
+                        <p className="feedback-message">"{item.message}"</p>
                       </div>
-                      <p className="feedback-message">"{item.message}"</p>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                  
+                  {/* Load More / Show Less buttons */}
+                  <div className="feedback-controls">
+                    {visibleCount < feedback.length && (
+                      <button className="load-more-btn" onClick={handleLoadMore}>
+                        <FaChevronDown />
+                        Load More ({feedback.length - visibleCount} more)
+                      </button>
+                    )}
+                    
+                    {visibleCount > 2 && (
+                      <button className="show-less-btn" onClick={handleShowLess}>
+                        <FaChevronUp />
+                        Show Less
+                      </button>
+                    )}
+                  </div>
+                </>
               )}
             </div>
           </div>

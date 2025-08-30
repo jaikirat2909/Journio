@@ -601,3 +601,72 @@
 .wishlist-button.in-wishlist:hover {
   background: #e04a6a;
 }
+/* Image optimization styles */
+.lazy-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.lazy-image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: opacity 0.3s ease;
+}
+
+.lazy-image-container.loading .lazy-image {
+  opacity: 0;
+}
+
+.lazy-image-container.loaded .lazy-image {
+  opacity: 1;
+}
+
+.image-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Optimize existing image styles */
+.destination-image-container,
+.package-image {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Will-change for performance */
+.destinations-grid,
+.packages-grid {
+  will-change: transform;
+}
+
+.destination-card,
+.package-card {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

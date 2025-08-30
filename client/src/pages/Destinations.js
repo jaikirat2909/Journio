@@ -3,6 +3,47 @@ import { useNavigate } from 'react-router-dom';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import '../styles/Destinations.css';
 
+// Cache for destinations data
+let destinationsCache = null;
+let cacheTimestamp = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+// Image optimization utility
+const optimizeImageUrl = (url, width = 600) => {
+  if (!url) return '';
+  if (url.includes('unsplash.com') || url.includes('cloudinary.com')) {
+    return `${url}${url.includes('?') ? '&' : '?'}w=${width}&q=80&fit=crop&auto=format`;
+  }
+  return url;
+};
+
+// Lazy Image Component
+const LazyImage = React.memo(({ src, alt, className, onLoad }) => {
+  const [imageSrc, setImageSrc] = useState('/placeholder-image.jpg'); // Small placeholder
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = optimizeImageUrl(src);
+    img.onload = () => {
+      setImageSrc(optimizeImageUrl(src));
+      setIsLoaded(true);
+      onLoad && onLoad();
+    };
+  }, [src, onLoad]);
+
+  return (
+    <div className={`lazy-image-container ${isLoaded ? 'loaded' : 'loading'} ${className}`}>
+      <div 
+        className="lazy-image" 
+        style={{ backgroundImage: `url(${imageSrc})` }}
+        aria-label={alt}
+      />
+      {!isLoaded && <div className="image-skeleton"></div>}
+    </div>
+  );
+});
+
 const Destinations = () => {
   const [destinations, setDestinations] = useState([]);
   const [packages, setPackages] = useState([]);
@@ -17,6 +58,7 @@ const Destinations = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [wishlistStatus, setWishlistStatus] = useState({});
+  const [loadedImages, setLoadedImages] = useState(new Set());
   const navigate = useNavigate();
 
   // Check authentication status
@@ -32,12 +74,40 @@ const Destinations = () => {
     return dates;
   }, []);
 
+  const handleImageLoad = useCallback((imageId) => {
+    setLoadedImages(prev => new Set(prev).add(imageId));
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
+      // Use cached data if available and not expired
+      const now = Date.now();
+      if (destinationsCache && now - cacheTimestamp < CACHE_DURATION) {
+        setDestinations(destinationsCache);
+        
+        const allPackages = destinationsCache.flatMap(dest => dest.packages || []);
+        setPackages(allPackages);
+        
+        // Check wishlist status for cached destinations
+        if (isAuthenticated) {
+          const destinationIds = destinationsCache.map(dest => dest._id || dest.id);
+          const status = await checkWishlistStatus(destinationIds);
+          setWishlistStatus(status);
+        }
+        
+        setIsLoading(false);
+        return;
+      }
+
       try {
         setIsLoading(true);
         const destRes = await fetch('http://localhost:5000/api/destinations');
         const destData = await destRes.json();
+        
+        // Cache the data
+        destinationsCache = destData;
+        cacheTimestamp = Date.now();
+        
         setDestinations(destData);
 
         const allPackages = destData.flatMap(dest => dest.packages || []);
@@ -45,7 +115,9 @@ const Destinations = () => {
 
         // If user is authenticated, fetch wishlist status
         if (isAuthenticated) {
-          await checkWishlistStatus(destData);
+          const destinationIds = destData.map(dest => dest._id || dest.id);
+          const status = await checkWishlistStatus(destinationIds);
+          setWishlistStatus(status);
         }
       } catch (err) {
         console.error('Fetch error:', err);
@@ -53,36 +125,35 @@ const Destinations = () => {
         setIsLoading(false);
       }
     };
+    
     fetchData();
   }, [isAuthenticated]);
 
-  // Check wishlist status for all destinations
-  const checkWishlistStatus = async (destinations) => {
+  // Check wishlist status for all destinations in a single API call
+  const checkWishlistStatus = useCallback(async (destinationIds) => {
+    if (!isAuthenticated || destinationIds.length === 0) return {};
+    
     try {
       const token = localStorage.getItem('token');
-      const status = {};
+      const response = await fetch('http://localhost:5000/api/wishlist/status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ destinationIds })
+      });
       
-      for (const destination of destinations) {
-        const response = await fetch(
-          `http://localhost:5000/api/wishlist/check/${destination._id || destination.id}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          }
-        );
-        
-        if (response.ok) {
-          const data = await response.json();
-          status[destination._id || destination.id] = data.isInWishlist;
-        }
+      if (response.ok) {
+        const data = await response.json();
+        return data.status || {};
       }
-      
-      setWishlistStatus(status);
+      return {};
     } catch (error) {
       console.error('Error checking wishlist status:', error);
+      return {};
     }
-  };
+  }, [isAuthenticated]);
 
   // Add or remove from wishlist
   const toggleWishlist = async (destination, e) => {
@@ -154,10 +225,11 @@ const Destinations = () => {
         <PackageCard 
           key={pkg._id || pkg.id} 
           pkg={pkg} 
-          onClick={() => setSelectedPackage(pkg)} 
+          onClick={() => setSelectedPackage(pkg)}
+          onImageLoad={handleImageLoad}
         />
       ));
-  }, [packages, packageIndex, visiblePackagesCount]);
+  }, [packages, packageIndex, visiblePackagesCount, handleImageLoad]);
 
   const handleBookingChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -215,6 +287,7 @@ const Destinations = () => {
               destination={destination} 
               isInWishlist={wishlistStatus[destination._id || destination.id] || false}
               onWishlistToggle={toggleWishlist}
+              onImageLoad={handleImageLoad}
             />
           ))}
         </div>
@@ -245,40 +318,59 @@ const Destinations = () => {
   );
 };
 
-const PackageCard = React.memo(({ pkg, onClick }) => (
-  <div className="package-card" onClick={onClick}>
-    <div className="package-image" style={{ backgroundImage: `url(${pkg.image})` }} loading="lazy" alt={pkg.name}></div>
-    <div className="package-details">
-      <h3>{pkg.name}</h3>
-      <div className="price-duration">
-        <span className="price">${pkg.price}</span>
-        <span className="duration">{pkg.duration}</span>
+const PackageCard = React.memo(({ pkg, onClick, onImageLoad }) => {
+  const imageId = `package-${pkg._id || pkg.id}`;
+  
+  return (
+    <div className="package-card" onClick={onClick}>
+      <LazyImage 
+        src={pkg.image} 
+        alt={pkg.name}
+        className="package-image"
+        onLoad={() => onImageLoad(imageId)}
+      />
+      <div className="package-details">
+        <h3>{pkg.name}</h3>
+        <div className="price-duration">
+          <span className="price">${pkg.price}</span>
+          <span className="duration">{pkg.duration}</span>
+        </div>
+        <ul className="includes">{pkg.includes?.map((item, i) => <li key={i}>{item}</li>)}</ul>
+        <button className="view-details-btn">View Details</button>
       </div>
-      <ul className="includes">{pkg.includes?.map((item, i) => <li key={i}>{item}</li>)}</ul>
-      <button className="view-details-btn">View Details</button>
     </div>
-  </div>
-));
+  );
+});
 
-const DestinationCard = React.memo(({ destination, isInWishlist, onWishlistToggle }) => (
-  <div className="destination-card">
-    <div className="destination-image" style={{ backgroundImage: `url(${destination.image})` }} loading="lazy" alt={destination.name}>
-      <div className="overlay"></div>
-      <button 
-        className={`wishlist-button ${isInWishlist ? 'in-wishlist' : ''}`}
-        onClick={(e) => onWishlistToggle(destination, e)}
-        title={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-      >
-        {isInWishlist ? <FaHeart /> : <FaRegHeart />}
-      </button>
+const DestinationCard = React.memo(({ destination, isInWishlist, onWishlistToggle, onImageLoad }) => {
+  const imageId = `destination-${destination._id || destination.id}`;
+  
+  return (
+    <div className="destination-card">
+      <div className="destination-image-container">
+        <LazyImage 
+          src={destination.image} 
+          alt={destination.name}
+          className="destination-image"
+          onLoad={() => onImageLoad(imageId)}
+        />
+        <div className="overlay"></div>
+        <button 
+          className={`wishlist-button ${isInWishlist ? 'in-wishlist' : ''}`}
+          onClick={(e) => onWishlistToggle(destination, e)}
+          title={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+        >
+          {isInWishlist ? <FaHeart /> : <FaRegHeart />}
+        </button>
+      </div>
+      <div className="destination-content">
+        <h3>{destination.name}</h3>
+        <p>{destination.description}</p>
+        <ul className="highlights">{destination.highlights?.map((item, i) => <li key={i}>{item}</li>)}</ul>
+      </div>
     </div>
-    <div className="destination-content">
-      <h3>{destination.name}</h3>
-      <p>{destination.description}</p>
-      <ul className="highlights">{destination.highlights?.map((item, i) => <li key={i}>{item}</li>)}</ul>
-    </div>
-  </div>
-));
+  );
+});
 
 // PackageModal remains the same as before
 const PackageModal = React.memo(({ selectedPackage, bookingInfo, onClose, onBookingChange, onBookNow, getFutureDates }) => {
@@ -292,7 +384,11 @@ const PackageModal = React.memo(({ selectedPackage, bookingInfo, onClose, onBook
           <div className="modal-left">
             <h2>{selectedPackage.name}</h2>
             <div className="image-gallery">
-              <div className="main-image" style={{ backgroundImage: `url(${selectedPackage.image})` }} loading="lazy" alt={selectedPackage.name}></div>
+              <LazyImage 
+                src={selectedPackage.image} 
+                alt={selectedPackage.name}
+                className="main-image"
+              />
             </div>
             <div className="package-includes">
               <h3>What's Included</h3>

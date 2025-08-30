@@ -37,6 +37,44 @@ const createBooking = async (req, res) => {
   }
 };
 
+// NEW: Create booking with payment (combined endpoint)
+const createBookingWithPayment = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { destination, packageName, departureDate, travelers, totalAmount, transactionId } = req.body;
+
+    // Find user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Create booking object with transaction ID
+    const newBooking = {
+      destination,
+      packageName,
+      departureDate: new Date(departureDate),
+      travelers: parseInt(travelers),
+      totalAmount: parseFloat(totalAmount),
+      status: 'confirmed',
+      bookingDate: new Date(),
+      transactionId // Store transaction ID with booking
+    };
+
+    // Add to user's bookings
+    user.bookings.push(newBooking);
+    await user.save();
+
+    res.status(201).json({
+      message: 'Booking and payment processed successfully',
+      booking: newBooking
+    });
+  } catch (error) {
+    console.error('Create booking with payment error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // Get all bookings for a user
 const getUserBookings = async (req, res) => {
   try {
@@ -145,6 +183,7 @@ const cancelBooking = async (req, res) => {
 
 module.exports = {
   createBooking,
+  createBookingWithPayment, // Export the new function
   getUserBookings,
   getBooking,
   updateBooking,
