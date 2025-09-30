@@ -664,3 +664,36 @@
     flex-direction: column;
   }
 }
+/* Default icon color */
+.dashboard-sidebar .nav-item svg {
+  color: #333; /* dark for visibility */
+  transition: color 0.3s ease;
+}
+
+/* Active tab icon color */
+.dashboard-sidebar .nav-item.active svg {
+  color: #007bff; /* or your brand color */
+}
+
+/* On hover */
+.dashboard-sidebar .nav-item:hover svg {
+  color: #007bff;
+}
+.dashboard-sidebar .nav-item svg {
+  color: #333;
+  background: rgba(255, 255, 255, 0.7); /* light circle background */
+  border-radius: 50%;
+  padding: 6px;
+  font-size: 18px;
+}
+.dashboard-sidebar .nav-item svg {
+  color: #fff; /* keep white */
+  text-shadow: 0 0 4px rgba(0,0,0,0.7); /* glow effect */
+}
+.dashboard-sidebar .nav-item svg {
+  color: white !important;
+  background: #007bff;  /* or your theme */
+  border-radius: 50%;
+  padding: 6px;
+  font-size: 18px;
+}
