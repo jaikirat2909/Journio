@@ -1,4 +1,4 @@
-Journio 🌍✈️
+#Journio 🌍✈️
 
 Journio is a full-stack travel application designed to provide users with a seamless travel booking experience. Built with modern technologies, it offers a responsive, user-friendly interface and powerful backend features.
 
@@ -31,3 +31,4 @@ Database: MongoDB
 Authentication: JWT / Secure login system
 
 Payment Gateway: Stripe
+
